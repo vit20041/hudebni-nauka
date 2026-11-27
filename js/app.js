@@ -3,11 +3,10 @@
 const Chapters = [];
 const PARTS = [
   { n: 'I', title: 'Hudební nauka', sub: 'základy' },
-  { n: 'II', title: 'Harmonie', sub: 'připravuje se', soon: true },
-];
-const SOON = [
-  'Čtyřhlasá sazba', 'Hlavní funkce T–S–D a kadence', 'Sextakordy a kvartsextakordy', 'Dominantní septakord',
-  'Vedlejší funkce a klamný spoj', 'Mollová harmonie', 'Vedlejší dominanty a modulace', 'Alterace a neapolský sextakord',
+  { n: 'II', title: 'Harmonie', sub: 'funkční harmonie, čtyřhlas', soon: ['Vedlejší dominanty a modulace', 'Alterace a neapolský sextakord'] },
+  { n: 'III', title: 'Hudební formy', sub: 'rozvrženo, připravuje se', soon: [
+    'Stavba hudební myšlenky', 'Malé písňové formy', 'Velká písňová forma, menuet, scherzo', 'Variace', 'Rondo',
+    'Sonátová forma', 'Polyfonní formy: kánon, invence, fuga', 'Cyklické formy: suita, sonáta, symfonie, koncert', 'Vokální formy', 'Formy 19. a 20. století'] },
 ];
 
 /* stavební kameny textu kapitol */
@@ -29,9 +28,8 @@ const App = (() => {
     nav.innerHTML = '';
     nav.append(h('a', { href: '#/', class: 'nhome' }, 'Úvod'));
     PARTS.forEach((pt, pi) => {
-      nav.append(h('div', { class: 'npart' }, h('b', {}, `Díl ${pt.n}`), ` ${pt.title}`, pt.soon ? h('em', {}, pt.sub) : null));
+      nav.append(h('div', { class: 'npart' }, h('b', {}, `Díl ${pt.n}`), ` ${pt.title}`, h('em', {}, pt.sub)));
       const ol = h('ol', { class: 'nlist' });
-      if (pt.soon) SOON.forEach(t => ol.append(h('li', {}, h('span', { class: 'soon' }, t))));
       Chapters.filter(c => c.part === pi + 1).forEach(c => {
         const qs = c.quizzes || [];
         const m = qs.filter(id => Stats.mastered(id)).length;
@@ -39,6 +37,7 @@ const App = (() => {
           h('span', { class: 'nn' }, c.n), h('span', { class: 'nt' }, c.title),
           qs.length ? h('span', { class: 'np', title: `zvládnuto ${m} z ${qs.length} cvičení` }, `${m}/${qs.length}`) : null)));
       });
+      if (pt.soon) pt.soon.forEach(t => ol.append(h('li', {}, h('span', { class: 'soon', title: 'připravuje se' }, t))));
       nav.append(ol);
     });
     nav.append(h('div', { class: 'npart' }, h('b', {}, 'Nástroje')));
@@ -95,14 +94,17 @@ const App = (() => {
     const art = h('article', { class: 'chap home' });
     art.append(h('header', { class: 'chead' }, h('div', { class: 'kick' }, 'Interaktivní učebnice'), h('h1', {}, 'Hudební nauka a harmonie'),
       h('p', { class: 'lead', html: 'Od notové osnovy po čtyřhlasou sazbu. Každá kapitola má výklad s živými ukázkami a cvičení, ve kterých odpovídáš výběrem, hrou na klaviaturu nebo MIDI klávesy, zápisem do osnovy nebo zpěvem do mikrofonu.' })));
-    const grid = h('div', { class: 'hgrid' });
-    Chapters.filter(c => c.part === 1).forEach(c => {
+    PARTS.forEach((pt, pi) => {
+      const grid = h('div', { class: 'hgrid' });
+      Chapters.filter(c => c.part === pi + 1).forEach(c => {
       const qs = c.quizzes || []; const m = qs.filter(id => Stats.mastered(id)).length;
       grid.append(h('a', { class: 'hcard', href: '#/' + c.id }, h('span', { class: 'hn' }, c.n), h('b', {}, c.title), h('span', { class: 'hs' }, c.short || ''),
         qs.length ? h('span', { class: 'hbar' }, h('i', { style: `width:${100 * m / qs.length}%` })) : null));
+      });
+      art.append(h('h2', { class: 'hh' }, `Díl ${pt.n} – ${pt.title}`));
+      if (grid.children.length) art.append(grid);
+      if (pt.soon) art.append(h('p', { class: 'mut' }, (grid.children.length ? 'Dále připravuji: ' : 'Připravuji: ') + pt.soon.join(' · ') + '.'));
     });
-    art.append(h('h2', { class: 'hh' }, 'Díl I – Hudební nauka'), grid);
-    art.append(h('h2', { class: 'hh' }, 'Díl II – Harmonie'), h('p', { class: 'mut' }, 'Připravuje se: ' + SOON.join(' · ') + '.'));
     art.append(h('div', { class: 'hint2' },
       h('h3', {}, 'Jak hrát'),
       h('ul', {},
@@ -195,6 +197,8 @@ const App = (() => {
         h('div', { class: 'srow' }, h('label', {}, 'Hlasitost'), vol, snd), h('div', { class: 'srow' }, PlayBtn('Zkušební akord', () => Snd.chord([60, 64, 67, 72])))),
       Sec('midi', 'MIDI klávesy', P_('Připoj MIDI klávesy USB kabelem a povol přístup. Funguje v Chrome a Edge; Firefox vyžaduje doplněk, Safari MIDI nepodporuje. Tóny z MIDI se počítají ve všech cvičeních s klaviaturou.'),
         h('div', { class: 'srow' }, h('button', { class: 'btn', onclick: () => Midi.start() }, 'Povolit MIDI'), midiSt)),
+      Sec('znaceni', 'Značení harmonie', P_('Jak popisovat akordy pod osnovou v Dílu II.'),
+        h('div', { class: 'srow' }, h('select', { onchange: e => store.set('hlab', e.target.value) }, ...[['fn', 'funkční značky (T, S⁶, D⁷, Tp…)'], ['deg', 'stupně (I, IV⁶, V⁷, VI…)'], ['both', 'obojí']].map(([v, l]) => h('option', { value: v, selected: store.get('hlab', 'fn') === v }, l))))),
       Sec('pc', 'Klávesnice počítače', P_('Bílé klávesy: <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> <kbd>F</kbd> <kbd>G</kbd> <kbd>H</kbd> <kbd>J</kbd> <kbd>K</kbd> (c až c o oktávu výš), černé: <kbd>W</kbd> <kbd>E</kbd> <kbd>T</kbd> <kbd>Z</kbd>/<kbd>Y</kbd> <kbd>U</kbd>. <kbd>Q</kbd> a <kbd>X</kbd> posouvají o oktávu dolů a nahoru.'),
         h('label', { class: 'chk' }, h('input', { type: 'checkbox', checked: KeyMap.enabled, onchange: e => KeyMap.enabled = e.target.checked }), 'Hrát z klávesnice počítače')),
       Sec('mic', 'Mikrofon a ladička', P_('Detekce rozpozná jeden tón (zpěv, flétna, smyčec). Akord z mikrofonu rozpoznat nejde. Nejlépe funguje ve sluchátkách, aby mikrofon neslyšel zvuk z reproduktorů. Odchylka je v centech (100 centů = půltón).'),
