@@ -7,7 +7,7 @@ nebo zpěvem do mikrofonu.
 - **Díl I – Hudební nauka** (hotovo): tón a notový zápis, rytmus a takt, posuvky, intervaly, stupnice a tóniny,
   akordy, tempo / dynamika / přednes, formy, nástroje a hlasy.
 - **Díl II – Harmonie**: čtyřhlasá sazba s automatickou kontrolou vedení hlasů a vzorovým řešením, T–S–D a kadence, obraty a K⁶₄, D⁷, vedlejší funkce a klamný spoj, mollová harmonie, vedlejší dominanty a modulace, alterace (N⁶, mollová subdominanta, zmenšený septakord, zvětšené sextakordy).
-- **Díl III – Hudební formy**: rozvrh dílu.
+- **Díl III – Hudební formy**: stavba hudební myšlenky, písňové formy, menuet, variace, rondo, sonátová forma, polyfonie, cykly, vokální formy, 19. a 20. století; poslech vygenerovaných skladeb ve formách (`js/formgen.js`).
 
 ## Spuštění
 
