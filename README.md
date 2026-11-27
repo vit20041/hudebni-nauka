@@ -32,3 +32,5 @@ powershell -File tools/serve.ps1     # http://localhost:8765/
 
 Zdroje třetích stran: font Bravura (SIL OFL, Steinberg) přes jsDelivr; klavírní vzorky Salamander Grand Piano
 (CC-BY 3.0, Alexander Holm) z tonejs.github.io. Výklad a příklady jsou vlastní.
+
+Při každém nasazení zvyš číslo `?v=` u skriptů a stylů v `index.html` (GitHub Pages ukládá soubory 10 minut do mezipaměti).
