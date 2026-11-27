@@ -86,7 +86,7 @@ const HX = (() => {
         const tk = H.task({ level, n: 6, mode, accs: keyPool(mode, 3) });
         const ix = 1 + rnd(tk.specs.length - 1);
         const right = H.label(tk.specs[ix]);
-        const toks = Object.keys(H.TOK).filter(t => (H.progression.length, true));
+        const toks = H.LEVEL[level].filter(t => mode === 'dur' || !['Sp', 'Sp6', 'DSp', 'D7Sp', 'sm', 'sm6'].includes(t));
         const pool = [...new Set(toks.map(t => H.label(H.spec(t, tk.K))))];
         return {
           html: `<b>${tk.K.name}</b>: jakou funkci má akord s otazníkem?`,

@@ -315,3 +315,6 @@ svg.staff .colhl { fill: color-mix(in srgb, var(--accent2) 14%, transparent); }
 .vchip.on.v2, .vchip.on.v3 { background: var(--accent2); border-color: var(--accent2); color: #fff; }
 .vchip:disabled { opacity: .4; cursor: default; }
 .rgrid figure.fig { margin: 0; }
+span.dsl { position: relative; display: inline-block; }
+span.dsl::after { content: '/'; position: absolute; left: 0; right: 0; text-align: center; font-weight: 400; }
+svg.staff tspan.dsl { font-weight: 400; }

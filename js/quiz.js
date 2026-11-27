@@ -10,7 +10,9 @@ const Stats = {
   pct(id) { const s = this.get(id); return s.hist.length ? Math.round(100 * s.hist.reduce((a, b) => a + b, 0) / s.hist.length) : null; },
   mastered(id) { const s = this.get(id); return s.hist.length >= 20 && this.pct(id) >= 90; },
 };
-const ALL_QUIZZES = {}; // id -> definice (pro přehled pokroku)
+const ALL_QUIZZES = {};
+/* přeškrtnuté D (zmenšený septakord) v HTML textu */
+const dslash = s => String(s).split('D̸').join('<span class="dsl">D</span>'); // id -> definice (pro přehled pokroku)
 
 const Quiz = (() => {
   let active = null;
@@ -87,7 +89,7 @@ const Quiz = (() => {
         const wrap = h('div', { class: 'choices' + (q.choices.length > 6 ? ' many' : '') });
         q.choices.forEach(c => {
           const val = typeof c === 'object' ? c.value : c, lab = typeof c === 'object' ? c.label : c;
-          wrap.append(h('button', { class: 'choice', html: lab, onclick: e => { if (done) return; const ok = Array.isArray(q.answer) ? q.answer.includes(val) : val === q.answer; e.currentTarget.classList.add(ok ? 'good' : 'bad'); finish(ok); } }));
+          wrap.append(h('button', { class: 'choice', html: dslash(lab), onclick: e => { if (done) return; const ok = Array.isArray(q.answer) ? q.answer.includes(val) : val === q.answer; e.currentTarget.classList.add(ok ? 'good' : 'bad'); finish(ok); } }));
         });
         input.append(wrap);
       }
@@ -197,7 +199,7 @@ const Quiz = (() => {
       if (done) return; done = true;
       Stats.add(def.id, ok && !gaveUp); score();
       fb.className = 'qfb ' + (gaveUp ? 'show' : ok ? 'good' : 'bad');
-      fb.innerHTML = `<b>${gaveUp ? 'Řešení' : ok ? 'Správně' : 'Špatně'}</b>${q.explain ? ' · ' + q.explain : ''}`;
+      fb.innerHTML = `<b>${gaveUp ? 'Řešení' : ok ? 'Správně' : 'Špatně'}</b>${q.explain ? ' · ' + dslash(q.explain) : ''}`;
       if (q.after) q.after(fb);
       if (mode === 'choice' && q.choices) {
         $$('.choice', input).forEach((b, i) => { const c = q.choices[i]; const val = typeof c === 'object' ? c.value : c; if (Array.isArray(q.answer) ? q.answer.includes(val) : val === q.answer) b.classList.add('right'); b.disabled = true; });

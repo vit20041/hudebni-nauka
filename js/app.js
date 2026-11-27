@@ -3,7 +3,7 @@
 const Chapters = [];
 const PARTS = [
   { n: 'I', title: 'Hudební nauka', sub: 'základy' },
-  { n: 'II', title: 'Harmonie', sub: 'funkční harmonie, čtyřhlas', soon: ['Vedlejší dominanty a modulace', 'Alterace a neapolský sextakord'] },
+  { n: 'II', title: 'Harmonie', sub: 'funkční harmonie, čtyřhlas' },
   { n: 'III', title: 'Hudební formy', sub: 'rozvrženo, připravuje se', soon: [
     'Stavba hudební myšlenky', 'Malé písňové formy', 'Velká písňová forma, menuet, scherzo', 'Variace', 'Rondo',
     'Sonátová forma', 'Polyfonní formy: kánon, invence, fuga', 'Cyklické formy: suita, sonáta, symfonie, koncert', 'Vokální formy', 'Formy 19. a 20. století'] },

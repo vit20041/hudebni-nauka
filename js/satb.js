@@ -138,12 +138,12 @@ const Satb = (() => {
       id: def.id, title: def.title, desc: def.desc,
       options: def.options || [...(def.dur || def.minorOnly ? [] : [{ key: 'mode', label: 'Tónina', values: [['dur', 'durová'], ['moll', 'mollová'], ['mix', 'náhodně']] }]), { key: 'n', label: 'Počet akordů', values: [[4, '4'], [6, '6'], [8, '8']], def: def.n || 6 }],
       gen: o => {
-        const tk = H.task({ level: def.level, n: o.n || def.n || 6, mode: def.dur ? 'dur' : def.minorOnly ? 'moll' : (o.mode || 'dur'), only: def.only, toks: def.toks ? pick(def.toks) : null, accs: def.accs });
+        const tk = def.task ? def.task(o) : H.task({ level: def.level, n: o.n || def.n || 6, mode: def.dur ? 'dur' : def.minorOnly ? 'moll' : (o.mode || 'dur'), only: def.only, toks: def.toks ? pick(def.toks) : null, accs: def.accs });
         const which = def.given === 'mix' ? pick(['B', 'S']) : (def.given || 'B');
         const vi = which === 'B' ? 3 : 0;
         const fixed = tk.sol.map(v => { const r = [null, null, null, null]; r[vi] = v[vi]; return r; });
         const q = {
-          html: `<b>${tk.K.name}</b> – ${which === 'B' ? 'zadaný bas: doplň soprán, alt a tenor' : 'zadaný soprán: doplň alt, tenor a bas'}. Funkce jsou pod osnovou.`,
+          html: def.html ? def.html(tk, which) : `<b>${tk.K.name}</b> – ${which === 'B' ? 'zadaný bas: doplň soprán, alt a tenor' : 'zadaný soprán: doplň alt, tenor a bas'}. Funkce jsou pod osnovou.`,
           explain: '',
           solutionPlay: () => play(tk.sol),
           custom: (host, finish, onClean) => {

@@ -295,7 +295,13 @@ const Staff = (() => {
 
     function labelBelow(g, cx, t) {
       const yb = yPos(staves.length - 1, Math.min(lo[staves.length - 1] + 2, -3));
-      g.append(el('text', { x: cx, y: yb, class: 'lab', 'text-anchor': 'middle' }, t));
+      const tx = el('text', { x: cx, y: yb, class: 'lab', 'text-anchor': 'middle' });
+      // „D̸“ (přeškrtnuté D): kombinující lomítko nahradíme vlastním přeškrtnutím
+      String(t).split(/(D̸)/).forEach(part => {
+        if (part === 'D̸') { tx.append(el('tspan', {}, 'D'), el('tspan', { dx: '-0.62em', class: 'dsl' }, '/')); }
+        else if (part) tx.append(el('tspan', part.startsWith('⁹') ? { dx: '0.08em' } : {}, part));
+      });
+      g.append(tx);
     }
 
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
